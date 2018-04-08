@@ -1,0 +1,11 @@
+.container
+  %table.table
+    %thead
+      %tr
+        %th User name
+        %th Number of comments
+    %tbody
+      - @users.each do |user|
+        %tr
+          %td= user.name
+          %td= user.comment_count

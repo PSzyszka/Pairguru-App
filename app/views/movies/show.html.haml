@@ -1,0 +1,19 @@
+%h1= @movie.title
+.jumbotron
+  = @movie.description
+- if user_signed_in?
+  %p= link_to 'Email me details about this movie', send_info_movie_path(@movie), class: 'btn btn-sm btn-default'
+
+  - if @comments.any?{|comment| comment.user_id == current_user.id }
+  - else
+    = form_for(@comment, url: movie_comments_path(@movie.id)) do |form|
+      %p= form.text_area(:description, size: "160x10")
+      %p= form.hidden_field(:movie_id)
+      = form.submit
+
+.container
+  - @comments.each do |comment|
+    %h5= comment.user&.name
+    .well= comment.description
+    - if user_signed_in? && current_user.id == comment.user_id
+      = link_to 'Delete comment', movie_comment_path(@movie.id, comment.id), method: :delete, data: { confirm: 'Are you sure?' }
